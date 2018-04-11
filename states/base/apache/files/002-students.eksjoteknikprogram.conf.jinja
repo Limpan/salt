@@ -1,0 +1,70 @@
+{% for user, data in pillar['students'].iteritems() %}
+<VirtualHost 172.30.10.200:443>
+  ServerName {{ user }}.students.eksjoteknikprogram.se
+
+  ServerAdmin linus.torngren@eksjo.se
+  DocumentRoot /srv/www/students.eksjoteknikprogram.se/sites/{{ user }}/
+ 
+  ErrorLog ${APACHE_LOG_DIR}/students.eksjoteknikprogram.se_error.log
+  CustomLog ${APACHE_LOG_DIR}/students.eksjoteknikprogram.se_access.log combined
+
+  SSLEngine On
+  SSLCertificateFile /etc/letsencrypt/live/eksjoteknikprogram.se/cert.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/eksjoteknikprogram.se/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/eksjoteknikprogram.se/chain.pem
+
+  Header always set Strict-Transport-Security "max-age=15768000"
+
+  RequestHeader append "X-Forwarded-Proto" "https"
+  RequestHeader set "X-Forwarded-Ssl" "on"
+
+  <Location />
+    Require all granted
+  </Location>
+</VirtualHost>
+
+<VirtualHost 172.30.10.200:443>
+  ServerName {{ user }}-dav.students.eksjoteknikprogram.se
+
+  ServerAdmin linus.torngren@eksjo.se
+  DocumentRoot /srv/www/students.eksjoteknikprogram.se/sites/{{ user }}
+
+  ErrorLog ${APACHE_LOG_DIR}/dav.eksjoteknikprogram.se_error.log
+  CustomLog ${APACHE_LOG_DIR}/dav.eksjoteknikprogram.se_access.log combined
+
+  SSLEngine On
+  SSLCertificateFile /etc/letsencrypt/live/eksjoteknikprogram.se/cert.pem
+  SSLCertificateKeyFile /etc/letsencrypt/live/eksjoteknikprogram.se/privkey.pem
+  SSLCertificateChainFile /etc/letsencrypt/live/eksjoteknikprogram.se/chain.pem
+
+  Header always set Strict-Transport-Security "max-age=15768000"
+
+  RequestHeader append "X-Forwarded-Proto" "https"
+  RequestHeader set "X-Forwarded-Ssl" "on"
+
+  <IfModule mod_userdir.c>
+    UserDir disabled
+  </IfModule>
+
+  <IfModule mod_php7.c>
+   php_flag engine off
+  </IfModule>
+
+  <Directory /srv/www/students.eksjoteknikprogram.se/sites/{{ user }}>
+    Options +Indexes +FollowSymLinks
+    AllowOverride None
+    Require all granted
+    DirectoryIndex disabled
+  </Directory>
+
+  <Location />
+    Dav On
+    Options +Indexes +FollowSymLinks
+    AllowOverride None
+    AuthUserFile /srv/www/students.eksjoteknikprogram.se/.htpasswd
+    AuthName "WebDAV"
+    AuthType Basic
+    Require user {{ user }}
+  </Location>
+</VirtualHost>
+{% endfor %}

@@ -1,0 +1,2 @@
+letsencrypt==0.7.0
+certbot-loopia==0.2.0
