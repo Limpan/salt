@@ -1,2 +1,2 @@
-pillars/base/students.sls
-
+pillars/base/*
+!pillars/base/*.example

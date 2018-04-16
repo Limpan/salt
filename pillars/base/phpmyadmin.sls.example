@@ -1,0 +1,2 @@
+phpmyadmin:
+  - cookie_auth: 32_char_secret

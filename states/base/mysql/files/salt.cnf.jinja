@@ -1,0 +1,5 @@
+[client]
+host = localhost
+user = root
+socket = /var/run/mysqld/mysqld.sock
+password = {{ salt['pillar.get']('mysql:root_pw', '') }}

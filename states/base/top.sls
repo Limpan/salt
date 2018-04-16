@@ -5,3 +5,5 @@ base:
     - apache
     - letsencrypt
     - php
+    - mysql
+    - phpmyadmin
